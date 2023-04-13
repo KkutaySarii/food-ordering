@@ -15,19 +15,25 @@ const Carousel = () => {
     arrows: false,
     autoplay: true,
     autoplaySpeed: 3500,
+    appendDots: (dots) => (
+      <div>
+        <ul className="container mx-auto w-full text-start">{dots}</ul>
+      </div>
+    ),
     customPaging: (i) => (
-      <div className="w-3 h-3 border rounded-full bg-white transiton-all"></div>
+      <div className="w-3 h-3 border bg-white rounded-full mt-4 md:mt-10"></div>
     ),
   };
 
   return (
-    <div className="">
+    <div className="min-h-screen relative w-full -mt-[88px] ">
       <div className="absolute z-[-10] top-0 left-0 w-full h-full">
         <Image
-          className="object-cover"
           src="/images/hero-bg.jpg"
           alt=""
           layout="fill"
+          objectFit="cover"
+          priority
         />
       </div>
       <Slider {...settings}>

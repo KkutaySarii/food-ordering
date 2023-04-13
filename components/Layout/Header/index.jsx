@@ -67,7 +67,9 @@ const Index = () => {
           </a>
           <button
             onClick={() => setIsMenuModal(true)}
-            className="mx-[10px] md:hidden"
+            className={`mx-[10px] md:hidden z-50 ${
+              isMenuModal ? "hidden" : "block"
+            }`}
           >
             <GiHamburgerMenu className="text-xl hover:text-primary cursor-pointer transition-all" />
           </button>
