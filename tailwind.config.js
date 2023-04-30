@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "menu-item": "linear-gradient(to bottom, #f1f2f3 25px, #222831 25px)"
+      },
       container: {
         screens: {
           xs: "293px",
@@ -19,6 +22,7 @@ module.exports = {
       colors: {
         primary: "#ffbe33",
         secondary: "#222831",
+        "menu-img-box": "#f1f2f3"
       },
       fontFamily: {
         dancing: ["Dancing Script", "cursive"],
