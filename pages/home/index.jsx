@@ -5,16 +5,18 @@ import Campaigns from "@/components/Ui/Campaigns";
 import MenuWrapper from "@/components/Product/MenuWrapper";
 import About from "@/components/Ui/About";
 import Reservation from "@/components/Ui/Reservation";
+import Customers from "@/components/Customers";
 
 const index = () => {
   return (
-    <div className="">
+    <React.Fragment>
       <Carousel />
       <Campaigns />
       <MenuWrapper />
       <About />
       <Reservation />
-    </div>
+      <Customers />
+    </React.Fragment>
   );
 };
 

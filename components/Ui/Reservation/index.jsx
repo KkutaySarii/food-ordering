@@ -2,7 +2,7 @@ import React from "react";
 
 import { useFormik } from "formik";
 
-import Input from "@/components/form/Input";
+import Input from "@/components/Form/Input";
 import Title from "../Title";
 import { reservationSchema } from "@/schema/reservationSchema";
 
