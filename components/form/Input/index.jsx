@@ -1,7 +1,7 @@
 import React from "react";
 
 const Input = (props) => {
-  const { type, placeholder, ...inputProps } = props;
+  const { type, placeholder, touched, errorMessage, ...inputProps } = props;
   return (
     <div>
       <label className="relative block cursor-text">
@@ -9,7 +9,9 @@ const Input = (props) => {
           type={type}
           className={`w-full h-14 border px-4 ${
             type !== "datetime-local" && "py-1"
-          } border-primary outline-none peer`}
+          } ${
+            touched && errorMessage ? "border-danger" : "border-primary"
+          }  outline-none peer`}
           required
           {...inputProps}
         />
@@ -19,6 +21,9 @@ const Input = (props) => {
           </span>
         )}
       </label>
+      {touched && errorMessage && (
+        <span className="text-xs text-danger">{errorMessage}</span>
+      )}
     </div>
   );
 };
