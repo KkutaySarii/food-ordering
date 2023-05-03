@@ -11,6 +11,7 @@ const Input = (props) => {
             type !== "datetime-local" && "py-1"
           } border-primary outline-none peer`}
           required
+          {...inputProps}
         />
         {type !== "datetime-local" && (
           <span className="absolute top-0 left-0 px-4 text-sm  h-full flex items-center peer-focus:text-xs peer-focus:h-7 peer-valid:text-xs peer-valid:h-7 transition all ">
