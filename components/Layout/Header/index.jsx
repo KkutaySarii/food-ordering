@@ -13,7 +13,7 @@ const Header = () => {
   const [isMenuModal, setIsMenuModal] = useState(false);
 
   const router = useRouter();
-
+  console.log(isMenuModal);
   return (
     <div
       className={`h-[5.5rem] ${
@@ -23,8 +23,8 @@ const Header = () => {
       <div className="container mx-auto flex items-center justify-between text-white h-full">
         <Logo />
         <nav
-          className={`md:static absolute h-screen top-0 left-0 z-40 grid place-content-center text-black md:text-white md:w-auto md:h-auto w-full md:bg-transparent bg-white ${
-            isMenuModal && "hidden"
+          className={`md:static absolute top-0 left-0 md:w-auto md:h-auto w-full h-screen md:text-white text-black md:bg-transparent bg-white md:flex hidden z-50  ${
+            isMenuModal === true && "!grid place-content-center"
           }`}
         >
           <ul className="flex md:flex-row flex-col items-center">
@@ -53,31 +53,33 @@ const Header = () => {
             </button>
           )}
         </nav>
-        <div className="flex items-center">
-          <Link href="/" className="mx-[10px]">
-            <FaUser className="hover:text-primary cursor-pointer transition-all" />
-          </Link>
-          <Link href="/" className="mx-[10px]">
-            <FaShoppingCart className="hover:text-primary cursor-pointer transition-all" />
-          </Link>
-          <button
-            onClick={() => setIsSearchModal(true)}
-            className="mx-[10px] z-50"
-          >
-            <FaSearch className="hover:text-primary cursor-pointer transition-all" />
-          </button>
-          <Link href="/" className="md:inline-block hidden">
-            <button className="btn mx-[10px]">Order Online</button>
-          </Link>
-          <button
-            onClick={() => setIsMenuModal(true)}
-            className={`mx-[10px] md:hidden z-50 ${
-              isMenuModal ? "hidden" : "block"
-            }`}
-          >
-            <GiHamburgerMenu className="text-xl hover:text-primary cursor-pointer transition-all" />
-          </button>
-        </div>
+        {!isMenuModal && (
+          <div className="flex items-center z-50">
+            <Link href="/auth/login" className="mx-[10px]">
+              <FaUser className="hover:text-primary cursor-pointer transition-all" />
+            </Link>
+            <Link href="/" className="mx-[10px]">
+              <FaShoppingCart className="hover:text-primary cursor-pointer transition-all" />
+            </Link>
+            <button
+              onClick={() => setIsSearchModal(true)}
+              className="mx-[10px] "
+            >
+              <FaSearch className="hover:text-primary cursor-pointer transition-all" />
+            </button>
+            <Link href="/" className="md:inline-block hidden">
+              <button className="btn mx-[10px]">Order Online</button>
+            </Link>
+            <button
+              onClick={() => setIsMenuModal(true)}
+              className={`mx-[10px] md:hidden z-50 ${
+                isMenuModal ? "hidden" : "block"
+              }`}
+            >
+              <GiHamburgerMenu className="text-xl hover:text-primary cursor-pointer transition-all" />
+            </button>
+          </div>
+        )}
       </div>
       {isSearchModal && <Search setIsSearchModal={setIsSearchModal} />}
     </div>
