@@ -8,7 +8,7 @@ import Reservation from "@/components/Ui/Reservation";
 import Customers from "@/components/Customers";
 import Footer from "@/components/Layout/Footer";
 
-const index = () => {
+const Index = () => {
   return (
     <React.Fragment>
       <Carousel />
@@ -21,4 +21,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

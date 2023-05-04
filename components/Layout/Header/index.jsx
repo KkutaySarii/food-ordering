@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { FaUser, FaShoppingCart, FaSearch } from "react-icons/fa";
 import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 
-import Logo from "../../Ui/Logo";
 import Search from "@/components/Ui/Search";
+import Logo from "@/components/Ui/Logo";
 
 const Header = () => {
   const [isSearchModal, setIsSearchModal] = useState(false);
@@ -23,21 +24,21 @@ const Header = () => {
         <Logo />
         <nav
           className={`md:static absolute h-screen top-0 left-0 z-40 grid place-content-center text-black md:text-white md:w-auto md:h-auto w-full md:bg-transparent bg-white ${
-            !isMenuModal && "hidden"
+            isMenuModal && "hidden"
           }`}
         >
           <ul className="flex md:flex-row flex-col items-center">
             <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
-              <a href="#">Home</a>
+              <Link href="/home">Home</Link>
             </li>
             <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
-              <a href="#">Menu</a>
+              <Link href="/menu">Menu</Link>
             </li>
             <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
-              <a href="#">About</a>
+              <Link href="/about">About</Link>
             </li>
             <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
-              <a href="#">Book Table</a>
+              <Link href="/reservation">Book Table</Link>
             </li>
           </ul>
           {isMenuModal && (
@@ -53,18 +54,21 @@ const Header = () => {
           )}
         </nav>
         <div className="flex items-center">
-          <a href="#" className="mx-[10px]">
+          <Link href="/" className="mx-[10px]">
             <FaUser className="hover:text-primary cursor-pointer transition-all" />
-          </a>
-          <a href="#" className="mx-[10px]">
+          </Link>
+          <Link href="/" className="mx-[10px]">
             <FaShoppingCart className="hover:text-primary cursor-pointer transition-all" />
-          </a>
-          <button onClick={() => setIsSearchModal(true)} className="mx-[10px]">
+          </Link>
+          <button
+            onClick={() => setIsSearchModal(true)}
+            className="mx-[10px] z-50"
+          >
             <FaSearch className="hover:text-primary cursor-pointer transition-all" />
           </button>
-          <a href="#" className="md:inline-block hidden">
+          <Link href="/" className="md:inline-block hidden">
             <button className="btn mx-[10px]">Order Online</button>
-          </a>
+          </Link>
           <button
             onClick={() => setIsMenuModal(true)}
             className={`mx-[10px] md:hidden z-50 ${

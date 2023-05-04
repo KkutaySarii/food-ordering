@@ -1,7 +1,15 @@
+import Link from "next/link";
 import React from "react";
 
-const index = () => {
-  return <div className="text-[2rem] font-dancing font-bold">Feane</div>;
+const Logo = () => {
+  return (
+    <Link
+      href="/"
+      className="text-[2rem] font-dancing font-bold cursor-pointer"
+    >
+      Feane
+    </Link>
+  );
 };
 
-export default index;
+export default Logo;

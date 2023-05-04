@@ -1,0 +1,13 @@
+import React from "react";
+
+import MenuWrapper from "@/components/Product/MenuWrapper";
+
+const Index = () => {
+  return (
+    <div className="pt-10">
+      <MenuWrapper />
+    </div>
+  );
+};
+
+export default Index;
