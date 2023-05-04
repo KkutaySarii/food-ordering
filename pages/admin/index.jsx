@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import { FaGithub } from "react-icons/fa";
 
-import { registerSchema } from "@/schema/registerSchema";
+import { adminSchema } from "@/schema/adminSchema";
 import Title from "@/components/Ui/Title";
 import Input from "@/components/Form/Input";
 
-const Register = () => {
+const Admin = () => {
   const onSubmit = async (values, actions) => {
     await new Promise((resolve) => {
       setTimeout(resolve, 4000);
@@ -19,36 +19,25 @@ const Register = () => {
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
       initialValues: {
-        fullName: "",
-        email: "",
+        username: "",
         password: "",
-        confirmPassword: "",
       },
       onSubmit,
-      validationSchema: registerSchema,
+      validationSchema: adminSchema,
     });
 
   const inputs = [
     {
       id: 1,
-      name: "fullName",
+      name: "username",
       type: "text",
-      placeholder: "Your Name",
-      value: values.fullName,
-      errorMessage: errors.fullName,
-      touched: touched.fullName,
+      placeholder: "Your Username",
+      value: values.username,
+      errorMessage: errors.username,
+      touched: touched.username,
     },
     {
       id: 2,
-      name: "email",
-      type: "email",
-      placeholder: "Your Email",
-      value: values.email,
-      errorMessage: errors.email,
-      touched: touched.email,
-    },
-    {
-      id: 3,
       name: "password",
       type: "password",
       placeholder: "Your Password",
@@ -56,19 +45,10 @@ const Register = () => {
       errorMessage: errors.password,
       touched: touched.password,
     },
-    {
-      id: 4,
-      name: "confirmPassword",
-      type: "password",
-      placeholder: "Your Password Again",
-      value: values.confirmPassword,
-      errorMessage: errors.confirmPassword,
-      touched: touched.confirmPassword,
-    },
   ];
   return (
     <div className="container mx-auto my-20 flex flex-col items-center  ">
-      <Title addClass="text-[40px]">Register</Title>
+      <Title addClass="text-[40px]">Admin Login</Title>
       <form
         className="md:w-1/2 w-full flex flex-col gap-y-3 mt-5"
         onSubmit={handleSubmit}
@@ -82,12 +62,13 @@ const Register = () => {
           />
         ))}
         <div className="w-full">
-          <button className="btn w-full my-3">REGISTER</button>
+          <button className="btn w-full my-3">LOGIN</button>
+
           <Link
-            href="/auth/login"
+            href="/"
             className="text-sm underline cursor-pointer text-secondary"
           >
-            Do you have a account?
+            Home Page
           </Link>
         </div>
       </form>
@@ -95,4 +76,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Admin;
