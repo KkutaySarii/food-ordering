@@ -38,6 +38,15 @@ const Customers = () => {
     autoplaySpeed: 3500,
     nextArrow: <NextBtn />,
     prevArrow: <PrevBtn />,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          arrows: false,
+        },
+      },
+    ],
   };
   return (
     <div className="container mx-auto mb-[90px]">

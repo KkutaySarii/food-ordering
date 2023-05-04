@@ -7,7 +7,7 @@ import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 import Logo from "../../Ui/Logo";
 import Search from "@/components/Ui/Search";
 
-const Index = () => {
+const Header = () => {
   const [isSearchModal, setIsSearchModal] = useState(false);
   const [isMenuModal, setIsMenuModal] = useState(false);
 
@@ -80,4 +80,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Header;

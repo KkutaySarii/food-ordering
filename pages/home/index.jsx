@@ -17,7 +17,6 @@ const index = () => {
       <About />
       <Reservation />
       <Customers />
-      <Footer />
     </React.Fragment>
   );
 };
