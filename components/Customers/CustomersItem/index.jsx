@@ -3,7 +3,7 @@ import React from "react";
 
 const CustomersItem = ({ imgSrc }) => {
   return (
-    <div>
+    <div className="mx-4">
       <div className="bg-secondary px-[25px] pt-[25px] pb-[15px] rounded-[5px] text-white">
         <p className="text-[15px] mb-2.5">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. A mollitia,
