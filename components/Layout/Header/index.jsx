@@ -13,7 +13,6 @@ const Header = () => {
   const [isMenuModal, setIsMenuModal] = useState(false);
 
   const router = useRouter();
-  console.log(isMenuModal);
   return (
     <div
       className={`h-[5.5rem] ${
@@ -58,7 +57,7 @@ const Header = () => {
             <Link href="/auth/login" className="mx-[10px]">
               <FaUser className="hover:text-primary cursor-pointer transition-all" />
             </Link>
-            <Link href="/" className="mx-[10px]">
+            <Link href="/cart" className="mx-[10px]">
               <FaShoppingCart className="hover:text-primary cursor-pointer transition-all" />
             </Link>
             <button
