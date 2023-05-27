@@ -7,8 +7,8 @@ import { RiEBike2Line } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
 
 import Accounts from "@/components/Profile/accounts";
+import Order from "@/components/Profile/orders";
 import Password from "@/components/Profile/password";
-import Order from "@/components/Profile/order";
 
 const Index = () => {
   const [tabs, setTabs] = useState(0);

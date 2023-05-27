@@ -1,6 +1,6 @@
 import React from "react";
 
-import Title from "../Ui/Title";
+import Title from "@/components/Ui/Title";
 
 const Order = () => {
   return (

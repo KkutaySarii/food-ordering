@@ -24,6 +24,7 @@ module.exports = {
         secondary: "#222831",
         "menu-img-box": "#f1f2f3",
         danger: "#ef4444",
+        success: "#10b981",
       },
       fontFamily: {
         dancing: ["Dancing Script", "cursive"],

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useFormik } from "formik";
 
-import Title from "../Ui/Title";
+import Title from "@/components/Ui/Title";
 import Input from "../Form/Input";
 import { passwordSchema } from "@/schema/passwordSchema";
 

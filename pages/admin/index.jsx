@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { useState } from "react";
 
 import { MdOutlineFastfood } from "react-icons/md";
@@ -6,10 +5,12 @@ import { RiEBike2Line } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi";
+import { BsWindowDesktop } from "react-icons/bs";
 
-import Password from "@/components/Profile/password";
-import Order from "@/components/Profile/order";
 import Products from "@/components/Admin/products";
+import Orders from "@/components/Admin/orders";
+import Category from "@/components/Admin/category";
+import Footer from "@/components/Admin/footer";
 
 const Index = () => {
   const [tabs, setTabs] = useState(0);
@@ -74,7 +75,7 @@ const Index = () => {
                 className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
                 onClick={() => setTabs(3)}
               >
-                <IoExitOutline />
+                <BsWindowDesktop />
                 <span>Footer</span>
               </button>
             </li>
@@ -95,8 +96,9 @@ const Index = () => {
         </div>
       </div>
       {tabs === 0 && <Products />}
-      {tabs === 1 && <Password />}
-      {tabs === 2 && <Order />}
+      {tabs === 1 && <Orders />}
+      {tabs === 2 && <Category />}
+      {tabs === 3 && <Footer />}
     </div>
   );
 };
