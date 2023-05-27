@@ -1,79 +1,104 @@
-import React from "react";
-import Link from "next/link";
+import Image from "next/image";
+import React, { useState } from "react";
 
-import { useFormik } from "formik";
-import { FaGithub } from "react-icons/fa";
+import { MdOutlineFastfood } from "react-icons/md";
+import { RiEBike2Line } from "react-icons/ri";
+import { IoExitOutline } from "react-icons/io5";
+import { FaUserAlt } from "react-icons/fa";
+import { BiCategory } from "react-icons/bi";
 
-import { adminSchema } from "@/schema/adminSchema";
-import Title from "@/components/Ui/Title";
-import Input from "@/components/Form/Input";
+import Password from "@/components/Profile/password";
+import Order from "@/components/Profile/order";
+import Products from "@/components/Admin/products";
 
-const Admin = () => {
-  const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    });
-    actions.resetForm();
-  };
+const Index = () => {
+  const [tabs, setTabs] = useState(0);
 
-  const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
-    useFormik({
-      initialValues: {
-        username: "",
-        password: "",
-      },
-      onSubmit,
-      validationSchema: adminSchema,
-    });
-
-  const inputs = [
-    {
-      id: 1,
-      name: "username",
-      type: "text",
-      placeholder: "Your Username",
-      value: values.username,
-      errorMessage: errors.username,
-      touched: touched.username,
-    },
-    {
-      id: 2,
-      name: "password",
-      type: "password",
-      placeholder: "Your Password",
-      value: values.password,
-      errorMessage: errors.password,
-      touched: touched.password,
-    },
-  ];
   return (
-    <div className="container mx-auto my-20 flex flex-col items-center  ">
-      <Title addClass="text-[40px]">Admin Login</Title>
-      <form
-        className="md:w-1/2 w-full flex flex-col gap-y-3 mt-5"
-        onSubmit={handleSubmit}
-      >
-        {inputs.map((input) => (
-          <Input
-            key={input.id}
-            {...input}
-            onChange={handleChange}
-            onBlur={handleBlur}
+    <div className="px-10 flex justify-between sm:flex-row flex-col sm:items-start items-center gap-10 mb-10">
+      <div className="flex flex-col w-72">
+        <div className="p-6 border-x-2 border-t-2 border-b flex flex-col items-center">
+          <FaUserAlt
+            className="rounded-full border-4 border-black"
+            size={100}
           />
-        ))}
-        <div className="w-full">
-          <button className="btn w-full my-3">LOGIN</button>
-
-          <Link
-            href="/"
-            className="text-sm underline cursor-pointer text-secondary"
-          >
-            Home Page
-          </Link>
+          <b className="text-2xl text-center mt-1">Admin</b>
         </div>
-      </form>
+        <div>
+          <ul className="font-bold text-sm">
+            <li
+              className={`border-x-2 text-black border-t border-b-2 ${
+                tabs === 0 && "text-white bg-primary"
+              }`}
+            >
+              <button
+                className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
+                onClick={() => setTabs(0)}
+              >
+                <MdOutlineFastfood />
+                <span>Products</span>
+              </button>
+            </li>
+            <li
+              className={`border-x-2 text-black border-t border-b-2 ${
+                tabs === 1 && "text-white bg-primary"
+              }`}
+            >
+              <button
+                className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
+                onClick={() => setTabs(1)}
+              >
+                <RiEBike2Line />
+                <span>Orders</span>
+              </button>
+            </li>
+            <li
+              className={`border-x-2 text-black border-t border-b-2 ${
+                tabs === 2 && "text-white bg-primary"
+              }`}
+            >
+              <button
+                className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
+                onClick={() => setTabs(2)}
+              >
+                <BiCategory />
+                <span>Categories</span>
+              </button>
+            </li>
+            <li
+              className={`border-x-2 text-black border-t border-b-2 ${
+                tabs === 3 && "text-white bg-primary"
+              }`}
+            >
+              <button
+                className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
+                onClick={() => setTabs(3)}
+              >
+                <IoExitOutline />
+                <span>Footer</span>
+              </button>
+            </li>
+            <li
+              className={`border-x-2 text-black border-t border-b-2 ${
+                tabs === 4 && "text-white bg-primary"
+              }`}
+            >
+              <button
+                className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
+                onClick={() => setTabs(4)}
+              >
+                <IoExitOutline />
+                <span>Çıkış</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {tabs === 0 && <Products />}
+      {tabs === 1 && <Password />}
+      {tabs === 2 && <Order />}
     </div>
   );
 };
 
-export default Admin;
+export default Index;

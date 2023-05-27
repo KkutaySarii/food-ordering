@@ -7,12 +7,14 @@ import { RiEBike2Line } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
 
 import Accounts from "@/components/Profile/accounts";
+import Password from "@/components/Profile/password";
+import Order from "@/components/Profile/order";
 
 const Index = () => {
   const [tabs, setTabs] = useState(0);
 
   return (
-    <div className="px-10 flex sm:flex-row flex-col sm:items-start items-center gap-10">
+    <div className="px-10 flex sm:flex-row flex-col sm:items-start items-center gap-10 mb-10">
       <div className="flex flex-col w-72">
         <div className="p-6 border-x-2 border-t-2 border-b flex flex-col items-center">
           <Image
@@ -82,7 +84,8 @@ const Index = () => {
         </div>
       </div>
       {tabs === 0 && <Accounts />}
-      {tabs === 1 && <form></form>}
+      {tabs === 1 && <Password />}
+      {tabs === 2 && <Order />}
     </div>
   );
 };
