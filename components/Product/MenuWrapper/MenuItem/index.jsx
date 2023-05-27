@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 import { FaShoppingCart } from "react-icons/fa";
@@ -8,14 +9,16 @@ const MenuItem = () => {
     <div className="w-full px-4">
       <div className="mt-6 rounded-[15px] text-white overflow-hidden bg-secondary">
         <div className="grid place-content-center rounded-bl-[45px] bg-menu-img-box p-6">
-          <div className="relative w-[150px] h-[150px]">
-            <Image
-              alt=""
-              src="/images/f1.png"
-              layout="fill"
-              className="hover:scale-105 transition-all"
-            />
-          </div>
+          <Link href="/product">
+            <div className="relative w-[150px] h-[150px]">
+              <Image
+                alt=""
+                src="/images/f1.png"
+                layout="fill"
+                className="hover:scale-105 transition-all"
+              />
+            </div>
+          </Link>
         </div>
         <div className="flex flex-col p-6">
           <h5 className="text-xl mb-2 font-semibold">Delicious Pizza</h5>

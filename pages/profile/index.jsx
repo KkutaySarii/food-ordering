@@ -12,7 +12,6 @@ import Password from "@/components/Profile/password";
 
 const Index = () => {
   const [tabs, setTabs] = useState(0);
-
   return (
     <div className="px-10 flex sm:flex-row flex-col sm:items-start items-center gap-10 mb-10">
       <div className="flex flex-col w-72">
