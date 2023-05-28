@@ -62,8 +62,13 @@ const Login = () => {
           />
         ))}
         <div className="w-full">
-          <button className="btn w-full my-3">LOGIN</button>
-          <button className="btn !bg-secondary w-full flex items-center justify-center gap-x-2 mb-3">
+          <button type="submit" className="btn w-full my-3">
+            LOGIN
+          </button>
+          <button
+            type="button"
+            className="btn !bg-secondary w-full flex items-center justify-center gap-x-2 mb-3"
+          >
             <FaGithub />
             <span>GITHUB</span>
           </button>
