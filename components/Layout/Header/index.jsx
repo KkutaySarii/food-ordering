@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { useSelector } from "react-redux";
 import { FaUser, FaShoppingCart, FaSearch } from "react-icons/fa";
 import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
 
@@ -11,7 +12,7 @@ import Logo from "@/components/Ui/Logo";
 const Header = () => {
   const [isSearchModal, setIsSearchModal] = useState(false);
   const [isMenuModal, setIsMenuModal] = useState(false);
-
+  const cart = useSelector((state) => state.cart);
   const router = useRouter();
   return (
     <div
@@ -57,8 +58,11 @@ const Header = () => {
             <Link href="/auth/login" className="mx-[10px]">
               <FaUser className="hover:text-primary cursor-pointer transition-all" />
             </Link>
-            <Link href="/cart" className="mx-[10px]">
+            <Link href="/cart" className="mx-[10px] relative">
               <FaShoppingCart className="hover:text-primary cursor-pointer transition-all" />
+              <span className="absolute -top-3 -right-3 bg-primary text-sm  w-4 h-4 p-1 grid place-content-center font-semibold text-secondary rounded-full">
+                {cart.products.length > 0 ? cart.products.length : "0"}
+              </span>
             </Link>
             <button
               onClick={() => setIsSearchModal(true)}

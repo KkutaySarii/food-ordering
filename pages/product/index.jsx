@@ -1,13 +1,30 @@
 import React from "react";
 import Image from "next/image";
 
+import { useDispatch } from "react-redux";
+
+import { addProduct } from "@/redux/cartSlice";
 import Title from "@/components/Ui/Title";
+import { useRouter } from "next/router";
+
+const product = {
+  id: 3,
+  name: "Delicious Pizza",
+  price: 10,
+  image: "/images/f1.png",
+  desc: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+  sizePrices: [10, 20, 30],
+  extras: [],
+  quantity: 1,
+};
 
 const ProductDetail = () => {
+  const router = useRouter();
+  //const product = router.query;
   const [price, setPrice] = React.useState(10);
   const [size, setSize] = React.useState(0);
   const [extras, setExtras] = React.useState([]);
-  const sizePrices = [10, 20, 30];
+  const dispatch = useDispatch();
   const extraProducts = [
     {
       id: 1,
@@ -25,21 +42,29 @@ const ProductDetail = () => {
       price: 3,
     },
   ];
+
+  console.log(extras);
+
   const handlePrice = (number) => {
-    const difference = sizePrices[number] - sizePrices[size];
+    const difference = product.sizePrices[number] - product.sizePrices[size];
     setSize(number);
     setPrice(price + difference);
   };
 
-  const handleExtras = (e, number) => {
+  const handleExtras = (e, id) => {
     const checked = e.target.checked;
+    const extra = extraProducts.find((item) => item.id === id);
     if (checked) {
-      setPrice(price + number);
-      setExtras([...extras, number]);
+      setPrice(price + extra.price);
+      setExtras([...extras, extra]);
     } else {
-      setPrice(price - number);
-      setExtras(extras.filter((item) => item !== number));
+      setPrice(price - extra.price);
+      setExtras(extras.filter((item) => item.id !== id));
     }
+  };
+
+  const handleClick = () => {
+    dispatch(addProduct({ ...product, extras, price, quantity: 1 }));
   };
 
   return (
@@ -54,16 +79,11 @@ const ProductDetail = () => {
         />
       </div>
       <div className="md:flex-1 md:text-start text-center">
-        <Title addClass="text-5xl my-4">Good Pizza</Title>
+        <Title addClass="text-5xl my-4">{product.name}</Title>
         <span className="text-2xl text-primary font-bold underline underline-offset-3 ">
           ${price}
         </span>
-        <p className="text-sm my-4">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil
-          aliquid expedita omnis explicabo sapiente libero, accusantium
-          necessitatibus earum voluptatem numquam laboriosam provident ducimus!
-          Odit pariatur provident deserunt repudiandae voluptatum quidem.
-        </p>
+        <p className="text-sm my-4">{product.desc}</p>
         <div className="my-4">
           <h4 className="text-xl font-bold">Choose the size</h4>
           <div className="flex items-center gap-x-20 md:justify-start justify-center">
@@ -112,18 +132,23 @@ const ProductDetail = () => {
           </div>
         </div>
         <div className="flex gap-x-4 my-4 md:justify-start justify-center">
-          {extraProducts.map((extra) => (
-            <label key={extra.id} className="flex gap-x-1 items-center">
-              <input
-                type="checkbox"
-                onChange={(e) => handleExtras(e, extra.price)}
-                className="w-5 h-5 accent-primary"
-              />
-              <span className="text-sm  font-semibold">{extra.name}</span>
-            </label>
-          ))}
+          {extraProducts.map((extra) => {
+            const { id, name } = extra;
+            return (
+              <label key={id} className="flex gap-x-1 items-center">
+                <input
+                  type="checkbox"
+                  onChange={(e) => handleExtras(e, id)}
+                  className="w-5 h-5 accent-primary"
+                />
+                <span className="text-sm  font-semibold">{name}</span>
+              </label>
+            );
+          })}
         </div>
-        <button className="btn my-4">Add to Cart</button>
+        <button className="btn my-4" onClick={handleClick}>
+          Add to Cart
+        </button>
       </div>
     </div>
   );
