@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 
+import axios from "axios";
 import { useFormik } from "formik";
-import { FaGithub } from "react-icons/fa";
 
 import { registerSchema } from "@/schema/registerSchema";
 import Title from "@/components/Ui/Title";
@@ -10,10 +10,14 @@ import Input from "@/components/Form/Input";
 
 const Register = () => {
   const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    });
-    actions.resetForm();
+    const { fullName, email, password } = values;
+    const data = { fullName, email, password };
+    console.log(data);
+    try {
+      axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
@@ -82,7 +86,9 @@ const Register = () => {
           />
         ))}
         <div className="w-full">
-          <button className="btn w-full my-3">REGISTER</button>
+          <button type="submit" className="btn w-full my-3">
+            REGISTER
+          </button>
           <Link
             href="/auth/login"
             className="text-sm underline cursor-pointer text-secondary"
