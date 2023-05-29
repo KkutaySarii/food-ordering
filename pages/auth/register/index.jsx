@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import axios from "axios";
 import { useFormik } from "formik";
+import { toast } from "react-toastify";
 
 import { registerSchema } from "@/schema/registerSchema";
 import Title from "@/components/Ui/Title";
@@ -12,11 +13,11 @@ const Register = () => {
   const onSubmit = async (values, actions) => {
     const { fullName, email, password } = values;
     const data = { fullName, email, password };
-    console.log(data);
     try {
       axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, data);
+      toast.success("Register Success");
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
