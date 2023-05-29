@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { useFormik } from "formik";
 import { FaGithub } from "react-icons/fa";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 import { loginSchema } from "@/schema/loginSchema";
 import Title from "@/components/Ui/Title";
@@ -11,10 +12,18 @@ import Input from "@/components/Form/Input";
 
 const Login = () => {
   const { data: session } = useSession();
+  console.log(session);
   const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    });
+    try {
+      await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
+      toast.success("Login Success");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
     actions.resetForm();
   };
 
