@@ -11,7 +11,7 @@ import dbConnect from "@/utils/dbConnect";
 dbConnect();
 
 export const authOptions = {
-  //   adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(clientPromise),
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID,

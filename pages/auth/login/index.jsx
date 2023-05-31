@@ -12,7 +12,6 @@ import Input from "@/components/Form/Input";
 
 const Login = () => {
   const { data: session } = useSession();
-  console.log(session);
   const onSubmit = async (values, actions) => {
     try {
       await signIn("credentials", {
@@ -78,7 +77,10 @@ const Login = () => {
           </button>
           <button
             type="button"
-            onClick={() => signIn("github")}
+            onClick={() => {
+              signIn("github");
+              toast.success("Login Success");
+            }}
             className="btn !bg-secondary w-full flex items-center justify-center gap-x-2 mb-3"
           >
             <FaGithub />

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 import { MdOutlineFastfood } from "react-icons/md";
 import { RiEBike2Line } from "react-icons/ri";
@@ -6,6 +7,8 @@ import { IoExitOutline } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi";
 import { BsWindowDesktop } from "react-icons/bs";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 import Products from "@/components/Admin/products";
 import Orders from "@/components/Admin/orders";
@@ -14,6 +17,22 @@ import Footer from "@/components/Admin/footer";
 
 const Index = () => {
   const [tabs, setTabs] = useState(0);
+
+  const { push } = useRouter();
+
+  const logout = async () => {
+    try {
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/admin`);
+      if (res.data.success) {
+        toast.success(res.data.message);
+        push("/admin/login");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <div className="px-10 flex justify-between sm:flex-row flex-col sm:items-start items-center gap-10 mb-10">
@@ -86,7 +105,7 @@ const Index = () => {
             >
               <button
                 className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
-                onClick={() => setTabs(4)}
+                onClick={logout}
               >
                 <IoExitOutline />
                 <span>Çıkış</span>
@@ -101,6 +120,21 @@ const Index = () => {
       {tabs === 3 && <Footer />}
     </div>
   );
+};
+
+export const getServerSideProps = (ctx) => {
+  const cookie = ctx.req?.cookies || "";
+  if (cookie.admin !== process.env.ADMIN_TOKEN) {
+    return {
+      redirect: {
+        destination: "/admin/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default Index;

@@ -17,7 +17,7 @@ const handler = async (req, res) => {
     await newUser.save();
     res.status(200).json({ success: true, data: newUser });
   } catch (error) {
-    console.log(error);
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
