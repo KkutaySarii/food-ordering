@@ -23,7 +23,8 @@ const Index = () => {
   const logout = async () => {
     try {
       const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/admin`);
-      if (res.data.success) {
+      if (res.data.success && confirm("Are you sure you want to logout?")) {
+        //TODO: confirm -> sweetalert2
         toast.success(res.data.message);
         push("/admin/login");
       } else {

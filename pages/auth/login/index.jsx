@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { useFormik } from "formik";
 import { FaGithub } from "react-icons/fa";
@@ -12,19 +13,26 @@ import Input from "@/components/Form/Input";
 
 const Login = () => {
   const { data: session } = useSession();
+
+  const { push } = useRouter();
+
   const onSubmit = async (values, actions) => {
+    const { email, password } = values;
+    let options = { redirect: false, email, password };
     try {
-      await signIn("credentials", {
-        redirect: false,
-        email: values.email,
-        password: values.password,
-      });
+      await signIn("credentials", options);
       toast.success("Login Success");
-    } catch (error) {
-      toast.error(error.response.data.message);
+      actions.resetForm();
+    } catch (err) {
+      toast.error(err.message);
     }
-    actions.resetForm();
   };
+
+  useEffect(() => {
+    if (session) {
+      push("/profile");
+    }
+  }, [session, push]);
 
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({

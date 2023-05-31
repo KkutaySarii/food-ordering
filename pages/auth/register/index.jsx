@@ -1,21 +1,33 @@
 import React from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 import axios from "axios";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 import { registerSchema } from "@/schema/registerSchema";
 import Title from "@/components/Ui/Title";
 import Input from "@/components/Form/Input";
 
 const Register = () => {
+  const { data: session } = useSession();
+  const { push } = useRouter();
+  console.log(session);
   const onSubmit = async (values, actions) => {
     const { fullName, email, password } = values;
     const data = { fullName, email, password };
     try {
-      axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, data);
-      toast.success("Register Success");
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
+        data
+      );
+      console.log(res);
+      if (res.status === 200) {
+        toast.success("User created successfully");
+        push("/auth/login");
+      }
     } catch (error) {
       toast.error(error.response.data.message);
     }

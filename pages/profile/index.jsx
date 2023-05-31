@@ -1,10 +1,12 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { AiOutlineHome } from "react-icons/ai";
 import { IoKey } from "react-icons/io5";
 import { RiEBike2Line } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
+import { signOut, useSession } from "next-auth/react";
 
 import Accounts from "@/components/Profile/accounts";
 import Order from "@/components/Profile/orders";
@@ -12,6 +14,21 @@ import Password from "@/components/Profile/password";
 
 const Index = () => {
   const [tabs, setTabs] = useState(0);
+  const { data: session } = useSession();
+  const { push } = useRouter();
+  const handleSignout = () => {
+    if (confirm("Are you sure you want to logout?")) {
+      //TODO: confirm -> sweetalert2
+      signOut({ redirect: false, callbackUrl: "/auth/login" });
+    }
+  };
+
+  useEffect(() => {
+    if (!session) {
+      push("/auth/login");
+    }
+  }, [session, push]);
+
   return (
     <div className="px-10 flex sm:flex-row flex-col sm:items-start items-center gap-10 mb-10">
       <div className="flex flex-col w-72">
@@ -73,7 +90,7 @@ const Index = () => {
             >
               <button
                 className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
-                onClick={() => setTabs(3)}
+                onClick={handleSignout}
               >
                 <IoExitOutline />
                 <span>Çıkış</span>
