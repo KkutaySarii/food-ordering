@@ -9,6 +9,7 @@ import { BiCategory } from "react-icons/bi";
 import { BsWindowDesktop } from "react-icons/bs";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 import Products from "@/components/Admin/products";
 import Orders from "@/components/Admin/orders";
@@ -22,14 +23,25 @@ const Index = () => {
 
   const logout = async () => {
     try {
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/admin`);
-      if (res.data.success && confirm("Are you sure you want to logout?")) {
-        //TODO: confirm -> sweetalert2
-        toast.success(res.data.message);
-        push("/admin/login");
-      } else {
-        toast.error("Something went wrong");
-      }
+      Swal.fire({
+        title: "Do you want to logout?",
+        text: "You need to login again to use the app",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#10b981",
+        cancelButtonColor: "#ef4444",
+        confirmButtonText: "Yes, logout",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await axios.put(
+            `${process.env.NEXT_PUBLIC_API_URL}/admin`
+          );
+          if (res.data.success) {
+            toast.success(res.data.message);
+            push("/admin/login");
+          }
+        }
+      });
     } catch (error) {
       toast.error("Something went wrong");
     }

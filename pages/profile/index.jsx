@@ -6,7 +6,9 @@ import { AiOutlineHome } from "react-icons/ai";
 import { IoKey } from "react-icons/io5";
 import { RiEBike2Line } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
-import { signOut, useSession } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 import Accounts from "@/components/Profile/accounts";
 import Order from "@/components/Profile/orders";
@@ -14,20 +16,27 @@ import Password from "@/components/Profile/password";
 
 const Index = () => {
   const [tabs, setTabs] = useState(0);
-  const { data: session } = useSession();
   const { push } = useRouter();
   const handleSignout = () => {
-    if (confirm("Are you sure you want to logout?")) {
-      //TODO: confirm -> sweetalert2
-      signOut({ redirect: false, callbackUrl: "/auth/login" });
-    }
+    setTabs(3);
+    Swal.fire({
+      title: "Do you want to logout?",
+      text: "You need to login again to use the app",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#10b981",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Yes, logout",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        toast.success("Logout successfully");
+        signOut({
+          redirect: false,
+        });
+        push("/auth/login");
+      }
+    });
   };
-
-  useEffect(() => {
-    if (!session) {
-      push("/auth/login");
-    }
-  }, [session, push]);
 
   return (
     <div className="px-10 flex sm:flex-row flex-col sm:items-start items-center gap-10 mb-10">
@@ -104,6 +113,21 @@ const Index = () => {
       {tabs === 2 && <Order />}
     </div>
   );
+};
+
+export const getServerSideProps = async ({ req }) => {
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default Index;

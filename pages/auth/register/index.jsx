@@ -23,7 +23,6 @@ const Register = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
         data
       );
-      console.log(res);
       if (res.status === 200) {
         toast.success("User created successfully");
         push("/auth/login");

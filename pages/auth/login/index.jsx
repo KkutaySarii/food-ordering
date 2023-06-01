@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import { useFormik } from "formik";
 import { FaGithub } from "react-icons/fa";
-import { useSession, signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { toast } from "react-toastify";
 
 import { loginSchema } from "@/schema/loginSchema";
@@ -12,27 +12,19 @@ import Title from "@/components/Ui/Title";
 import Input from "@/components/Form/Input";
 
 const Login = () => {
-  const { data: session } = useSession();
-
   const { push } = useRouter();
-
   const onSubmit = async (values, actions) => {
     const { email, password } = values;
     let options = { redirect: false, email, password };
     try {
       await signIn("credentials", options);
       toast.success("Login Success");
+      push("/profile");
       actions.resetForm();
     } catch (err) {
       toast.error(err.message);
     }
   };
-
-  useEffect(() => {
-    if (session) {
-      push("/profile");
-    }
-  }, [session, push]);
 
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
@@ -104,6 +96,20 @@ const Login = () => {
       </form>
     </div>
   );
+};
+export const getServerSideProps = async ({ req }) => {
+  const session = await getSession({ req });
+  if (session) {
+    return {
+      redirect: {
+        destination: "/profile",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default Login;
