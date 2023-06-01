@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import { FaGithub } from "react-icons/fa";
 import { signIn, getSession } from "next-auth/react";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 import { loginSchema } from "@/schema/loginSchema";
@@ -15,11 +16,21 @@ const Login = () => {
   const { push } = useRouter();
   const onSubmit = async (values, actions) => {
     const { email, password } = values;
+    const data = { email };
     let options = { redirect: false, email, password };
     try {
-      await signIn("credentials", options);
-      toast.success("Login Success");
-      push("/profile");
+      const res_signin = await signIn("credentials", options);
+      const res_email = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/email`,
+        data
+      );
+      console.log(res_email);
+      if (res_signin.status === 200 && res_email.status === 200) {
+        toast.success("Login Success");
+        push("/profile/" + res_email.data.user_id);
+      } else {
+        toast.error("Login Failed");
+      }
       actions.resetForm();
     } catch (err) {
       toast.error(err.message);
@@ -99,10 +110,23 @@ const Login = () => {
 };
 export const getServerSideProps = async ({ req }) => {
   const session = await getSession({ req });
+  const email = session?.user?.email;
+  const data = { email };
+  let _id;
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/email`,
+      data
+    );
+    if (res.status === 200) _id = res.data.user_id;
+  } catch (err) {
+    console.log(err);
+  }
+
   if (session) {
     return {
       redirect: {
-        destination: "/profile",
+        destination: `/profile/${_id}`,
         permanent: false,
       },
     };

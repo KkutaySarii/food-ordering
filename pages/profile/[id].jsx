@@ -6,17 +6,22 @@ import { AiOutlineHome } from "react-icons/ai";
 import { IoKey } from "react-icons/io5";
 import { RiEBike2Line } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
+import { FaUserAlt } from "react-icons/fa";
 import { getSession, signOut, useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 import Accounts from "@/components/Profile/accounts";
 import Order from "@/components/Profile/orders";
 import Password from "@/components/Profile/password";
 
-const Index = () => {
+const Index = ({ user }) => {
   const [tabs, setTabs] = useState(0);
   const { push } = useRouter();
+  const { data: session } = useSession();
+  const { fullName, email, image_url, phoneNumber, address, job, bio } =
+    user || {};
   const handleSignout = () => {
     setTabs(3);
     Swal.fire({
@@ -38,18 +43,32 @@ const Index = () => {
     });
   };
 
+  useEffect(() => {
+    if (!session) {
+      push("/auth/login");
+    }
+  }, [push, session]);
+
   return (
     <div className="px-10 flex sm:flex-row flex-col sm:items-start items-center gap-10 mb-10">
       <div className="flex flex-col w-72">
         <div className="p-6 border-x-2 border-t-2 border-b flex flex-col items-center">
-          <Image
-            alt=""
-            src="/images/download.jpg"
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
-          <b className="text-2xl text-center mt-1">Zoe Barnes</b>
+          {image_url ? (
+            <Image
+              alt=""
+              src={image_url}
+              width={100}
+              height={100}
+              className="rounded-full"
+            />
+          ) : (
+            <FaUserAlt
+              className="rounded-full border-4 border-black"
+              size={100}
+            />
+          )}
+
+          <b className="text-2xl text-center mt-1">{fullName}</b>
         </div>
         <div>
           <ul className="font-bold text-sm">
@@ -108,15 +127,18 @@ const Index = () => {
           </ul>
         </div>
       </div>
-      {tabs === 0 && <Accounts />}
-      {tabs === 1 && <Password />}
+      {tabs === 0 && <Accounts user={user} />}
+      {tabs === 1 && <Password user={user} />}
       {tabs === 2 && <Order />}
     </div>
   );
 };
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, params }) => {
   const session = await getSession({ req });
+  const user = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/${params.id}`
+  );
   if (!session) {
     return {
       redirect: {
@@ -126,7 +148,9 @@ export const getServerSideProps = async ({ req }) => {
     };
   }
   return {
-    props: {},
+    props: {
+      user: user.data?.data,
+    },
   };
 };
 

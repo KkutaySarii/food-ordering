@@ -1,17 +1,32 @@
 import React from "react";
 
 import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 import Title from "@/components/Ui/Title";
 import Input from "../Form/Input";
 import { passwordSchema } from "@/schema/passwordSchema";
 
-const Password = () => {
+const Password = ({ user }) => {
+  const { _id } = user || {};
   const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    });
-    actions.resetForm();
+    try {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/${_id}`,
+        values
+      );
+      if (res.status === 200) {
+        toast.success("Password Updated Successfully");
+        window.location.reload();
+      } else {
+        toast.error("Password Update Failed");
+        actions.resetForm();
+      }
+    } catch (err) {
+      toast.error("Password Update Failed");
+      actions.resetForm();
+    }
   };
 
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
