@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import Title from "@/components/Ui/Title";
 
 const Orders = () => {

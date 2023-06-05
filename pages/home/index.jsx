@@ -7,12 +7,12 @@ import About from "@/components/Ui/About";
 import Reservation from "@/components/Ui/Reservation";
 import Customers from "@/components/Customers";
 
-const Index = () => {
+const Index = ({ categoryList }) => {
   return (
     <React.Fragment>
       <Carousel />
       <Campaigns />
-      <MenuWrapper />
+      <MenuWrapper categoryList={categoryList} />
       <About />
       <Reservation />
       <Customers />

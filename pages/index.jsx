@@ -1,8 +1,10 @@
 import Head from "next/head";
 
+import axios from "axios";
+
 import Home from "./home";
 
-export default function Index() {
+export default function Index({ categoryList }) {
   return (
     <>
       <Head>
@@ -17,7 +19,17 @@ export default function Index() {
           crossorigin="true"
         />
       </Head>
-      <Home />
+      <Home categoryList={categoryList} />
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
+
+  return {
+    props: {
+      categoryList: res.data?.data,
+    },
+  };
 }

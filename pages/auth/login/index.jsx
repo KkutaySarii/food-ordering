@@ -114,11 +114,13 @@ export const getServerSideProps = async ({ req }) => {
   const data = { email };
   let _id;
   try {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/email`,
-      data
-    );
-    if (res.status === 200) _id = res.data.user_id;
+    if (session) {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/email`,
+        data
+      );
+      if (res.status === 200) _id = res.data.user_id;
+    }
   } catch (err) {
     console.log(err);
   }
