@@ -29,7 +29,7 @@ const Header = () => {
         >
           <ul className="flex md:flex-row flex-col items-center">
             <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
-              <Link href="/home">Home</Link>
+              <Link href="/">Home</Link>
             </li>
             <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
               <Link href="/menu">Menu</Link>

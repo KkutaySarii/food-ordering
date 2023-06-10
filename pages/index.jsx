@@ -2,9 +2,9 @@ import Head from "next/head";
 
 import axios from "axios";
 
-import Home from "./home";
+import Home from "@/components/Home";
 
-export default function Index({ categoryList }) {
+function Index({ categoryList, productList }) {
   return (
     <>
       <Head>
@@ -16,20 +16,27 @@ export default function Index({ categoryList }) {
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
-          crossorigin="true"
+          crossOrigin="true"
         />
       </Head>
-      <Home categoryList={categoryList} />
+      <Home categoryList={categoryList} productList={productList} />
     </>
   );
 }
-
 export async function getServerSideProps() {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
+  const categories = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/categories`
+  );
+  const products = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/products`
+  );
 
   return {
     props: {
-      categoryList: res.data?.data,
+      categoryList: categories.data?.data,
+      productList: products.data?.data,
     },
   };
 }
+
+export default Index;

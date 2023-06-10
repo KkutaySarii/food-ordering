@@ -1,7 +1,29 @@
 import User from "@/models/User";
 import dbConnect from "../../../utils/dbConnect";
 
+import Cors from "cors";
+
+function initMiddleware(middleware) {
+  return (req, res) =>
+    new Promise((resolve, reject) => {
+      middleware(req, res, (result) => {
+        if (result instanceof Error) {
+          return reject(result);
+        }
+        return resolve(result);
+      });
+    });
+}
+
+const cors = initMiddleware(
+  Cors({
+    origin: "http://localhost:8000", // İzin vermek istediğiniz kökeni buraya girin
+    methods: ["GET", "POST"], // İzin vermek istediğiniz HTTP metodlarını buraya girin
+  })
+);
+
 const handler = async (req, res) => {
+  await cors(req, res);
   await dbConnect();
   const { method } = req;
   if (method === "GET") {

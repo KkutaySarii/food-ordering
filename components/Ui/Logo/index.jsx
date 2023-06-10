@@ -5,7 +5,7 @@ const Logo = () => {
   return (
     <Link
       href="/"
-      className="text-[2rem] font-dancing font-bold cursor-pointer"
+      className="text-[2rem] z-50 font-dancing font-bold cursor-pointer"
     >
       Feane
     </Link>

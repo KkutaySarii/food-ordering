@@ -4,20 +4,26 @@ import axios from "axios";
 
 import MenuWrapper from "@/components/Product/MenuWrapper";
 
-const Index = ({ categoryList }) => {
+const Index = ({ categoryList, productList }) => {
   return (
     <div className="pt-10">
-      <MenuWrapper categoryList={categoryList} />
+      <MenuWrapper categoryList={categoryList} productList={productList} />
     </div>
   );
 };
 
 export async function getServerSideProps() {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
+  const categories = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/categories`
+  );
+  const products = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/products`
+  );
 
   return {
     props: {
-      categoryList: res.data?.data,
+      categoryList: categories.data?.data,
+      productList: products.data?.data,
     },
   };
 }

@@ -15,9 +15,11 @@ import Products from "@/components/Admin/products";
 import Orders from "@/components/Admin/orders";
 import Category from "@/components/Admin/category";
 import Footer from "@/components/Admin/footer";
+import AddProduct from "@/components/Admin/addProduct";
 
-const Index = () => {
+const Index = ({ productList }) => {
   const [tabs, setTabs] = useState(0);
+  const [isProductModal, setIsProductModal] = useState(false);
 
   const { push } = useRouter();
 
@@ -127,15 +129,22 @@ const Index = () => {
           </ul>
         </div>
       </div>
-      {tabs === 0 && <Products />}
+      {tabs === 0 && <Products productList={productList} />}
       {tabs === 1 && <Orders />}
       {tabs === 2 && <Category />}
       {tabs === 3 && <Footer />}
+      {isProductModal && <AddProduct setIsProductModal={setIsProductModal} />}
+      <button
+        className="absolute bottom-10 right-10 btn !w-12 !h-12 !p-0 !grid place-content-center !rounded-full"
+        onClick={() => setIsProductModal(!isProductModal)}
+      >
+        +
+      </button>
     </div>
   );
 };
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = async (ctx) => {
   const cookie = ctx.req?.cookies || "";
   if (cookie.admin !== process.env.ADMIN_TOKEN) {
     return {
@@ -145,8 +154,11 @@ export const getServerSideProps = (ctx) => {
       },
     };
   }
+  const products = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/products`
+  );
   return {
-    props: {},
+    props: { productList: products.data.data },
   };
 };
 

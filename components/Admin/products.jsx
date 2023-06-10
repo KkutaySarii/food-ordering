@@ -1,8 +1,22 @@
 import Image from "next/image";
 
+import axios from "axios";
+import { toast } from "react-toastify";
+
 import Title from "@/components/Ui/Title";
 
-const Products = () => {
+const Products = ({ productList }) => {
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`
+      );
+      toast.success(response.data.message);
+      window.location.reload();
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
   return (
     <div className="w-full mt-5 overflow-x-auto flex flex-col items-start">
       <Title addClass="text-[40px]">Products</Title>
@@ -28,23 +42,35 @@ const Products = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="transition-all bg-secondary border-gray-700 hover:bg-primary ">
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
-                <Image src="/images/f1.png" alt="" width={50} height={50} />
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                63049e92...
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                Good Pizza
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                $ 10
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                <button className="btn !bg-danger">Delete</button>
-              </td>
-            </tr>
+            {productList.length > 0 &&
+              productList.map((product) => (
+                <tr
+                  key={product._id}
+                  className="transition-all bg-secondary border-gray-700 hover:bg-primary "
+                >
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
+                    <Image src={product.image} alt="" width={50} height={50} />
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    {product._id.length > 10 &&
+                      product._id.slice(0, 10) + "..."}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    {product.title}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    $ {product.prices[0]}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    <button
+                      className="btn !bg-danger"
+                      onClick={() => handleDelete(product._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
