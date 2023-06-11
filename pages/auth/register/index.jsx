@@ -12,7 +12,6 @@ import Title from "@/components/Ui/Title";
 import Input from "@/components/Form/Input";
 
 const Register = () => {
-  const { data: session } = useSession();
   const { push } = useRouter();
   const onSubmit = async (values, actions) => {
     const { fullName, email, password } = values;

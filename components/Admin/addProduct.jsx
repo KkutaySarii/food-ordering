@@ -30,9 +30,12 @@ const AddProduct = ({ setIsProductModal }) => {
 
   const onSubmit = async (values) => {
     const data = new FormData();
-    if (!file) return toast.error("Please choose an image");
-    if (!values.title) return toast.error("Please enter a title");
-    if (!values.desc) return toast.error("Please enter a description");
+    if (!file)
+      return toast.error("Please choose an image", { autoClose: 1000 });
+    if (!values.title)
+      return toast.error("Please enter a title", { autoClose: 1000 });
+    if (!values.desc)
+      return toast.error("Please enter a description", { autoClose: 1000 });
     if (!values.prices) return toast.error("Please enter a price");
 
     data.append("file", file);

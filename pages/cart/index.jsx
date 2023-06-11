@@ -1,14 +1,69 @@
-import Title from "@/components/Ui/Title";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 import { resetCart } from "@/redux/cartSlice";
+import Title from "@/components/Ui/Title";
 
-const Index = () => {
+const Index = ({ userList }) => {
+  const { data: session } = useSession();
+  const router = useRouter();
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const currentUser = userList.find(
+    (user) => user.email === session?.user?.email
+  );
+  const newOrder = {
+    customer: currentUser?.fullName,
+    address: currentUser?.address || "No address",
+    total: cart.total,
+    paymentMethod: 0,
+    status: 0,
+  };
+
+  const handleCheckout = async () => {
+    try {
+      if (session) {
+        if (cart.products.length === 0) {
+          toast.error("Your cart is empty!");
+          return;
+        }
+        Swal.fire({
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#10b981",
+          cancelButtonColor: "#ef4444",
+          confirmButtonText: "Yes, checkout it!",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const res = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/orders`,
+              newOrder
+            );
+            if (res.status === 201) {
+              toast.success("Order created successfully!");
+              dispatch(resetCart());
+              router.push(`/order/${res.data.data._id}`);
+            } else {
+              toast.error("Something went wrong!");
+            }
+          }
+        });
+      } else {
+        toast.error("You must login first!");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="min-h-[calc(100vh_-_460px)]">
       <div className="flex justify-between md:flex-row flex-col">
@@ -38,7 +93,7 @@ const Index = () => {
                 >
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center    ">
                     <Image
-                      src="/images/f1.png"
+                      src={product?.image}
                       alt="pizza"
                       width={50}
                       height={50}
@@ -46,10 +101,14 @@ const Index = () => {
                     <span>{product.name}</span>
                   </td>
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                    {product.extras.map((extra) => {
-                      const { id, name } = extra;
-                      return <span key={id}>{name}, </span>;
-                    })}
+                    {product.extras.length > 0 ? (
+                      product.extras.map((extra) => {
+                        const { id, name } = extra;
+                        return <span key={id}>{name}, </span>;
+                      })
+                    ) : (
+                      <span>No Extras</span>
+                    )}
                   </td>
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                     <span>${product.price}</span>
@@ -76,7 +135,7 @@ const Index = () => {
           </div>
           <div>
             <button
-              onClick={() => dispatch(resetCart())}
+              onClick={handleCheckout}
               className="btn mt-4 md:w-auto w-52"
             >
               Checkout Now
@@ -86,6 +145,16 @@ const Index = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async () => {
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user`);
+
+  return {
+    props: {
+      userList: res?.data.data || [],
+    },
+  };
 };
 
 export default Index;

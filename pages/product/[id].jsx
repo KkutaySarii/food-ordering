@@ -9,7 +9,7 @@ import Title from "@/components/Ui/Title";
 import axios from "axios";
 
 const ProductDetail = ({ product }) => {
-  const [price, setPrice] = useState(10);
+  const [price, setPrice] = useState(product.prices[0]);
   const [size, setSize] = useState(0);
   const [extras, setExtras] = useState([]);
   const dispatch = useDispatch();

@@ -1,7 +1,9 @@
+import axios from "axios";
 import Image from "next/image";
 import React from "react";
 
-const Index = () => {
+const Index = ({ order }) => {
+  console.log(order);
   return (
     <div className="overflow-x-auto">
       <div className="min-h-[calc(100vh_-_460px)] flex p-10 justify-between flex-col min-w-[1000px]">
@@ -26,16 +28,18 @@ const Index = () => {
             <tbody>
               <tr className="bg-secondary hover:bg-primary transition-all">
                 <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center    ">
-                  63107f5559991231
+                  {order._id.length > 8
+                    ? order._id.slice(0, 8) + "..."
+                    : order._id}
                 </td>
                 <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  Kutay Sarı
+                  {order?.customer}
                 </td>
                 <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  Konya
+                  {order?.address}
                 </td>
                 <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  $20
+                  ${order?.total}
                 </td>
               </tr>
             </tbody>
@@ -52,7 +56,11 @@ const Index = () => {
             />
             <span>Payment</span>
           </div>
-          <div className="flex items-center flex-col animate-pulse">
+          <div
+            className={`flex items-center flex-col ${
+              order?.status === 0 && "animate-pulse"
+            }`}
+          >
             <Image
               alt=""
               src="/images/bake.png"
@@ -62,7 +70,11 @@ const Index = () => {
             />
             <span>Preparing</span>
           </div>
-          <div className="flex items-center flex-col">
+          <div
+            className={`flex items-center flex-col ${
+              order?.status === 1 && "animate-pulse"
+            }`}
+          >
             <Image
               alt=""
               src="/images/bike.png"
@@ -72,7 +84,11 @@ const Index = () => {
             />
             <span>On the way</span>
           </div>
-          <div className="flex items-center flex-col">
+          <div
+            className={`flex items-center flex-col ${
+              order?.status === 2 && "animate-pulse"
+            }`}
+          >
             <Image
               alt=""
               src="/images/delivered.png"
@@ -86,6 +102,18 @@ const Index = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async ({ params }) => {
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/orders/${params.id}`
+  );
+
+  return {
+    props: {
+      order: res?.data.data || {},
+    },
+  };
 };
 
 export default Index;

@@ -1,6 +1,39 @@
+import { useEffect, useState } from "react";
+
+import axios from "axios";
+
 import Title from "@/components/Ui/Title";
 
 const Orders = () => {
+  const [orders, setOrders] = useState([]);
+  const statusList = ["Preparing", "On the way", "Delivered"];
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/orders`
+        );
+        setOrders(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getOrders();
+  }, []);
+
+  const handleClick = async (id) => {
+    const item = orders.find((order) => order._id === id);
+    try {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`,
+        { status: item.status + 1 }
+      );
+      setOrders([res.data.data, ...orders.filter((order) => order._id !== id)]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full mt-5 overflow-x-auto flex flex-col items-start">
       <Title addClass="text-[40px]">Orders</Title>
@@ -29,26 +62,40 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="transition-all bg-secondary border-gray-700 hover:bg-primary ">
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                63107...
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                Kutay Sarı
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                $ 10
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                Cash
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                Preparing
-              </td>
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                <button className="btn !bg-success">Next Stage</button>
-              </td>
-            </tr>
+            {orders.length > 0 &&
+              orders.map((order) => (
+                <tr
+                  className="transition-all bg-secondary border-gray-700 hover:bg-primary "
+                  key={order._id}
+                >
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    {order?._id.length > 8
+                      ? order?._id.slice(0, 8) + "..."
+                      : order._id}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    {order?.customer}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    $ {order?.total}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    {order?.paymentMethod === 0 ? "Cash" : "Card"}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    {statusList[order?.status]}
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    <button
+                      onClick={() => handleClick(order._id)}
+                      className="btn !bg-success"
+                      disabled={order?.status > 1}
+                    >
+                      Next Stage
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
