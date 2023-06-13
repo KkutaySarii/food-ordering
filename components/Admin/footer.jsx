@@ -1,31 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useFormik } from "formik";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 import Title from "../Ui/Title";
 import Input from "../Form/Input";
 import { footerSchema } from "@/schema/footerSchema";
 
 const Footer = () => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("instagram");
   const [input, setInput] = useState("");
   const [applications, setApplications] = useState([]);
+  const [footer, setFooter] = useState();
+
+  useEffect(() => {
+    const getFooter = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/footer`
+        );
+        setFooter(res?.data.data[0]);
+        setApplications(res?.data.data[0]?.links || []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getFooter();
+  });
+
   const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    });
-    actions.resetForm();
+    try {
+      const newFooter = {
+        location: values.location,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        desc: values.desc,
+        openingDay: values.openingDay,
+        openingTime: values.openingTime,
+        links: applications,
+      };
+      if (footer) {
+        const res = await axios.put(
+          `${process.env.NEXT_PUBLIC_API_URL}/footer/${footer._id}`,
+          newFooter
+        );
+        if (res.data.success) {
+          toast.success("Footer Updated Successfully", {
+            autoClose: 1000,
+          });
+        }
+      } else {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/footer`,
+          newFooter
+        );
+        if (res.data.success) {
+          toast.success("Footer Added Successfully", {
+            autoClose: 1000,
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
+      enableReinitialize: true,
       initialValues: {
-        location: "",
-        email: "",
-        phoneNumber: "",
-        description: "",
-        day: "",
-        time: "",
+        location: footer?.location || "",
+        email: footer?.email || "",
+        phoneNumber: footer?.phoneNumber || "",
+        desc: footer?.desc || "",
+        openingDay: footer?.openingDay || "",
+        openingTime: footer?.openingTime || "",
       },
       onSubmit,
       validationSchema: footerSchema,
@@ -53,7 +103,7 @@ const Footer = () => {
     {
       id: 3,
       name: "phoneNumber",
-      type: "number",
+      type: "text",
       placeholder: "Your Phone Number",
       value: values.phoneNumber,
       errorMessage: errors.phoneNumber,
@@ -61,33 +111,32 @@ const Footer = () => {
     },
     {
       id: 4,
-      name: "description",
+      name: "desc",
       type: "text",
       placeholder: "Write Description",
-      value: values.description,
-      errorMessage: errors.description,
-      touched: touched.description,
+      value: values.desc,
+      errorMessage: errors.desc,
+      touched: touched.desc,
     },
     {
       id: 5,
-      name: "day",
-      type: "date",
-      placeholder: "",
-      value: values.day,
-      errorMessage: errors.day,
-      touched: touched.day,
+      name: "openingDay",
+      type: "text",
+      placeholder: "Write a Day",
+      value: values.openingDay,
+      errorMessage: errors.openingDay,
+      touched: touched.openingDay,
     },
     {
       id: 6,
-      name: "time",
-      type: "time",
-      placeholder: "",
-      value: values.time,
-      errorMessage: errors.time,
-      touched: touched.time,
+      name: "openingTime",
+      type: "text",
+      placeholder: "Write a Time",
+      value: values.openingTime,
+      errorMessage: errors.openingTime,
+      touched: touched.openingTime,
     },
   ];
-
   return (
     <form className="w-full flex flex-col items-start" onSubmit={handleSubmit}>
       <Title addClass="text-[40px]">Footer</Title>
@@ -98,6 +147,7 @@ const Footer = () => {
             {...input}
             onChange={handleChange}
             onBlur={handleBlur}
+            required={true}
           />
         ))}
       </div>
@@ -105,26 +155,31 @@ const Footer = () => {
         <div className="flex items-center gap-5">
           <div className="h-auto">
             <select
-              id="countries"
-              className="h-14 border border-primary ring-primary text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-1 outline-none "
-              onChange={(e) => setValue(e.target.value)}
-              required
+              id="applications"
+              className="h-14 w-24 border border-primary ring-primary text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block p-1 outline-none "
+              defaultValue={"Choose a application"}
+              onChange={(e) => setValue(e.target.value.toLowerCase())}
             >
-              <option selected>Choose a application</option>
-              <option value="instagram">Instagram</option>
-              <option value="facebook">Facebook</option>
-              <option value="twitter">Twitter</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Twitter">Twitter</option>
+              <option value="Pinterest">Pinterest</option>
+              <option value="Linkedin">Linkedin</option>
             </select>
           </div>
           <Input
             placeholder="Link"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            required={false}
           />
           <button
             type="button"
             onClick={() => {
-              setApplications([...applications, { value, input }]);
+              setApplications([
+                ...applications,
+                { application: value, link: input },
+              ]);
               setInput("");
             }}
             className="btn"
@@ -136,7 +191,7 @@ const Footer = () => {
           {applications.map((application, index) => (
             <li key={index} className="flex items-center gap-1">
               <a target="_blank" href={application.input}>
-                <i className={`fa fa-${application.value} text-2xl`}></i>
+                <i className={`fa fa-${application.application} text-2xl`}></i>
               </a>
               <button
                 type="button"

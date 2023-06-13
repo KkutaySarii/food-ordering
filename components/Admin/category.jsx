@@ -74,6 +74,7 @@ const Category = () => {
           placeholder="Add a new category"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
+          required={true}
         />
         <button className="btn" onClick={addCategory}>
           Add

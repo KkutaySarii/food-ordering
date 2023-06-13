@@ -1,7 +1,5 @@
 import React from "react";
 
-import axios from "axios";
-
 import Carousel from "@/components/Ui/Carousel";
 import Campaigns from "@/components/Ui/Campaigns";
 import MenuWrapper from "@/components/Product/MenuWrapper";

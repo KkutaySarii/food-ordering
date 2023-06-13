@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
 import { SessionProvider } from "next-auth/react";
 import { ToastContainer } from "react-toastify";
+import axios from "axios";
 
 import { store } from "@/redux/store";
 import Layout from "@/components/Layout";

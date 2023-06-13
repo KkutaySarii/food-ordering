@@ -3,7 +3,6 @@ import Image from "next/image";
 import React from "react";
 
 const Index = ({ order }) => {
-  console.log(order);
   return (
     <div className="overflow-x-auto">
       <div className="min-h-[calc(100vh_-_460px)] flex p-10 justify-between flex-col min-w-[1000px]">

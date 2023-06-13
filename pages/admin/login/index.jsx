@@ -71,6 +71,7 @@ const Index = () => {
             {...input}
             onChange={handleChange}
             onBlur={handleBlur}
+            required={true}
           />
         ))}
         <div className="w-full">

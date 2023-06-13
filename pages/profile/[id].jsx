@@ -20,8 +20,7 @@ const Index = ({ user }) => {
   const [tabs, setTabs] = useState(0);
   const { push } = useRouter();
   const { data: session } = useSession();
-  const { fullName, email, image_url, phoneNumber, address, job, bio } =
-    user || {};
+  const { fullName, image_url } = user || {};
   const handleSignout = () => {
     setTabs(3);
     Swal.fire({
@@ -129,7 +128,7 @@ const Index = ({ user }) => {
       </div>
       {tabs === 0 && <Accounts user={user} />}
       {tabs === 1 && <Password user={user} />}
-      {tabs === 2 && <Order />}
+      {tabs === 2 && <Order customer={fullName} />}
     </div>
   );
 };

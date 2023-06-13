@@ -1,8 +1,15 @@
 import React from "react";
 
 const Input = (props) => {
-  const { type, placeholder, value, touched, errorMessage, ...inputProps } =
-    props;
+  const {
+    type,
+    placeholder,
+    required,
+    value,
+    touched,
+    errorMessage,
+    ...inputProps
+  } = props;
   return (
     <div className="w-full">
       <label className="relative block cursor-text">
@@ -13,7 +20,7 @@ const Input = (props) => {
           } ${
             touched && errorMessage ? "border-danger" : "border-primary"
           }  outline-none peer`}
-          required
+          required={required}
           value={value}
           {...inputProps}
         />

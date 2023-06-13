@@ -110,6 +110,7 @@ const Accounts = ({ user }) => {
             {...input}
             onChange={handleChange}
             onBlur={handleBlur}
+            required={true}
           />
         ))}
       </div>

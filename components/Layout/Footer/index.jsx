@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Title from "@/components/Ui/Title";
 
@@ -12,8 +12,32 @@ import {
   FaLinkedinIn,
   FaPinterest,
 } from "react-icons/fa";
+import axios from "axios";
 
 const Footer = () => {
+  const [footer, setFooter] = useState({});
+  useEffect(() => {
+    const getFooter = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/footer`
+        );
+        setFooter(res?.data.data[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getFooter();
+  }, []);
+
+  const SocialIcon = ({ iconname }) => {
+    if (iconname === "acebook") return <FaFacebookF />;
+    if (iconname === "twitter") return <FaTwitter />;
+    if (iconname === "instagram") return <FaInstagram />;
+    if (iconname === "linkedin") return <FaLinkedinIn />;
+    if (iconname === "pinterest") return <FaPinterest />;
+  };
+
   return (
     <div className="pt-[75px] pb-10 bg-secondary text-white">
       <div className="container mx-auto">
@@ -21,60 +45,54 @@ const Footer = () => {
           <div className="md:flex-1">
             <Title addClass="text-[28px] font-semibold mb-5">Contact Us</Title>
             <div>
-              <a className="flex gap-x-1 hover:text-primary cursor-pointers items-center justify-center my-1">
+              <a
+                href={footer?.location}
+                target="_blank"
+                className="flex gap-x-1 hover:text-primary cursor-pointers items-center justify-center my-1"
+              >
                 <MdLocationOn />
                 <span>Location</span>
               </a>
-              <a className="flex gap-x-1 items-center cursor-pointer  hover:text-primary justify-center my-1">
+              <a
+                href={`tel:${footer?.phoneNumber}`}
+                className="flex gap-x-1 items-center cursor-pointer  hover:text-primary justify-center my-1"
+              >
                 <IoCall />
-                <span>Call +01 1234567890</span>
+                <span>Call +{footer?.phoneNumber}</span>
               </a>
-              <a className="flex gap-x-1 hover:text-primary cursor-pointer items-center justify-center my-1">
+              <a
+                href={`mailto:${footer?.email}`}
+                className="flex gap-x-1 hover:text-primary cursor-pointer items-center justify-center my-1"
+              >
                 <FaEnvelope />
-                <span>demo@gmail.com</span>
+                <span>{footer?.email}</span>
               </a>
             </div>
           </div>
           <div className="md:flex-1">
             <Title addClass="text-[38px] font-bold mb-5">Feane</Title>
-            <p className="mb-4">
-              Necessary, making this the first true generator on the Internet.
-              It uses a dictionary of over 200 Latin words, combined with
-            </p>
+            <p className="mb-4">{footer?.desc}</p>
             <ul className="mt-5 mb-2.5 flex  gap-x-1 items-center justify-center">
-              <li>
-                <a className="bg-white text-secondary hover:text-primary w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center">
-                  <FaFacebookF />
-                </a>
-              </li>
-              <li>
-                <a className="bg-white text-secondary hover:text-primary w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center">
-                  <FaTwitter />
-                </a>
-              </li>
-              <li>
-                <a className="bg-white text-secondary hover:text-primary w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center">
-                  <FaLinkedinIn />
-                </a>
-              </li>
-              <li>
-                <a className="bg-white text-secondary hover:text-primary w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center">
-                  <FaInstagram />
-                </a>
-              </li>
-              <li>
-                <a className="bg-white text-secondary hover:text-primary w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center">
-                  <FaPinterest />
-                </a>
-              </li>
+              {footer?.links?.length > 0 &&
+                footer?.links?.map((link) => (
+                  <li key={link._id}>
+                    <a
+                      href={link.link}
+                      target="_blank"
+                      className="bg-white text-secondary hover:text-primary w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center"
+                    >
+                      <SocialIcon iconname={link.application} />
+                    </a>
+                  </li>
+                ))}
             </ul>
           </div>
           <div className="md:flex-1">
             <Title addClass="text-[28px] font-semibold mb-5">
               Opening Hours
             </Title>
-            <p className="mb-4">Everyday</p>
-            <p className="mb-4">10.00 Am -10.00 Pm</p>
+            <p className="mb-4">{footer?.openingDay}</p>
+            <p className="mb-4">{footer?.openingTime}</p>
           </div>
         </div>
         <div className="mt-6 text-center">
