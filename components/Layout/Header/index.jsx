@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { FaUser, FaShoppingCart, FaSearch } from "react-icons/fa";
 import { GiHamburgerMenu, GiCancel } from "react-icons/gi";
+import { useSession } from "next-auth/react";
 
 import Search from "@/components/Ui/Search";
 import Logo from "@/components/Ui/Logo";
@@ -14,6 +15,7 @@ const Header = () => {
   const [isMenuModal, setIsMenuModal] = useState(false);
   const cart = useSelector((state) => state.cart);
   const router = useRouter();
+
   return (
     <div
       className={`h-[5.5rem] ${
@@ -28,16 +30,36 @@ const Header = () => {
           }`}
         >
           <ul className="flex md:flex-row flex-col items-center">
-            <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
+            <li
+              className={`py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all ${
+                router.asPath === "/" && "text-primary"
+              }`}
+              onClick={() => setIsMenuModal(false)}
+            >
               <Link href="/">Home</Link>
             </li>
-            <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
+            <li
+              className={`py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all ${
+                router.asPath === "/menu" && "text-primary"
+              }`}
+              onClick={() => setIsMenuModal(false)}
+            >
               <Link href="/menu">Menu</Link>
             </li>
-            <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
+            <li
+              className={`py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all ${
+                router.asPath === "/about" && "text-primary"
+              }`}
+              onClick={() => setIsMenuModal(false)}
+            >
               <Link href="/about">About</Link>
             </li>
-            <li className="py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all">
+            <li
+              className={`py-[5px] px-5 uppercase hover:text-primary cursor-pointer transition-all ${
+                router.asPath === "/reservation" && "text-primary"
+              }`}
+              onClick={() => setIsMenuModal(false)}
+            >
               <Link href="/reservation">Book Table</Link>
             </li>
           </ul>
@@ -56,10 +78,22 @@ const Header = () => {
         {!isMenuModal && (
           <div className="flex items-center z-50">
             <Link href="/auth/login" className="mx-[10px]">
-              <FaUser className="hover:text-primary cursor-pointer transition-all" />
+              <FaUser
+                className={`hover:text-primary cursor-pointer transition-all ${
+                  router.asPath.includes("profile") ||
+                  router.asPath.includes("auth")
+                    ? "text-primary"
+                    : ""
+                }`}
+              />
             </Link>
             <Link href="/cart" className="mx-[10px] relative">
-              <FaShoppingCart className="hover:text-primary cursor-pointer transition-all" />
+              <FaShoppingCart
+                className={`
+              hover:text-primary cursor-pointer transition-all ${
+                router.asPath === "/cart" && "text-primary"
+              }`}
+              />
               <span className="absolute -top-3 -right-3 bg-primary text-sm  w-4 h-4 p-1 grid place-content-center font-semibold text-secondary rounded-full">
                 {cart.products.length > 0 ? cart.products.length : "0"}
               </span>

@@ -58,6 +58,7 @@ const Index = ({ userList }) => {
         });
       } else {
         toast.error("You must login first!");
+        router.push("/auth/login");
       }
     } catch (error) {
       toast.error(error.message);
@@ -68,58 +69,66 @@ const Index = ({ userList }) => {
     <div className="min-h-[calc(100vh_-_460px)]">
       <div className="flex justify-between md:flex-row flex-col">
         <div className="min-h-[calc(100vh_-_460px)] flex items-center flex-1 p-10 overflow-x-auto">
-          <table className="table-auto w-full text-sm text-center text-gray-500 min-w-[1000px]">
-            <thead className="text-xs bg-gray-700 uppercase text-gray-400">
-              <tr>
-                <th className="py-3 px-6" scope="col">
-                  Product
-                </th>
-                <th className="py-3 px-6" scope="col">
-                  Extras
-                </th>
-                <th className="py-3 px-6" scope="col">
-                  Prices
-                </th>
-                <th className="py-3 px-6" scope="col">
-                  Quantity
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {cart.products.map((product) => (
-                <tr
-                  key={product.id}
-                  className="bg-secondary hover:bg-primary transition-all"
-                >
-                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center    ">
-                    <Image
-                      src={product?.image}
-                      alt="pizza"
-                      width={50}
-                      height={50}
-                    />
-                    <span>{product.name}</span>
-                  </td>
-                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                    {product.extras.length > 0 ? (
-                      product.extras.map((extra) => {
-                        const { id, name } = extra;
-                        return <span key={id}>{name}, </span>;
-                      })
-                    ) : (
-                      <span>No Extras</span>
-                    )}
-                  </td>
-                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                    <span>${product.price}</span>
-                  </td>
-                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                    <span>{product.quantity}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="max-h-[450px] overflow-y-auto w-full">
+            {cart.products?.length > 0 ? (
+              <table className="table-auto w-full text-sm text-center text-gray-500 min-w-[1000px]">
+                <thead className="text-xs bg-gray-700 uppercase text-gray-400">
+                  <tr>
+                    <th className="py-3 px-6" scope="col">
+                      Product
+                    </th>
+                    <th className="py-3 px-6" scope="col">
+                      Extras
+                    </th>
+                    <th className="py-3 px-6" scope="col">
+                      Prices
+                    </th>
+                    <th className="py-3 px-6" scope="col">
+                      Quantity
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cart.products.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="bg-secondary hover:bg-primary transition-all"
+                    >
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center    ">
+                        <Image
+                          src={product?.image}
+                          alt="pizza"
+                          width={50}
+                          height={50}
+                        />
+                        <span>{product.name}</span>
+                      </td>
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                        {product.extras.length > 0 ? (
+                          product.extras.map((extra) => {
+                            const { id, name } = extra;
+                            return <span key={id}>{name}, </span>;
+                          })
+                        ) : (
+                          <span>No Extras</span>
+                        )}
+                      </td>
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                        <span>${product.price}</span>
+                      </td>
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                        <span>{product.quantity}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="flex justify-center items-center h-full">
+                <span className="text-2xl">Your cart is empty!</span>
+              </div>
+            )}
+          </div>
         </div>
         <div className="bg-secondary flex-col p-10 min-h-[calc(100vh_-_460px)] text-white flex justify-center items-center md:items-start">
           <Title addClass="text-[40px] md:text-start text-center">

@@ -79,7 +79,7 @@ const Footer = () => {
                     <a
                       href={link.link}
                       target="_blank"
-                      className="bg-white text-secondary hover:text-primary w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center"
+                      className="bg-white text-secondary hover:bg-primary hover:text-white w-[30px] h-[30px] cursor-pointer rounded-full grid place-content-center"
                     >
                       <SocialIcon iconname={link.application} />
                     </a>

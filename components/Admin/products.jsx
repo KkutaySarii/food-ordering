@@ -20,7 +20,7 @@ const Products = ({ productList }) => {
   return (
     <div className="w-full mt-5 overflow-x-auto flex flex-col items-start">
       <Title addClass="text-[40px]">Products</Title>
-      <div className="overflow-x-auto w-full mt-5">
+      <div className="overflow-auto max-h-[450px] w-full mt-5">
         <table className="w-full text-sm text-center text-gray-500 min-w-[1000px]">
           <thead className="text-xs text-gray-400 uppercase bg-gray-700">
             <tr>

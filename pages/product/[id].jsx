@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { addProduct } from "@/redux/cartSlice";
 import Title from "@/components/Ui/Title";
@@ -13,6 +13,9 @@ const ProductDetail = ({ product }) => {
   const [size, setSize] = useState(0);
   const [extras, setExtras] = useState([]);
   const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+
+  const isProductInCart = cart.products.find((p) => p._id === product._id);
 
   const handlePrice = (number) => {
     const difference = product.prices[number] - product.prices[size];
@@ -112,7 +115,11 @@ const ProductDetail = ({ product }) => {
             );
           })}
         </div>
-        <button className="btn my-4" onClick={handleClick}>
+        <button
+          disabled={isProductInCart}
+          className="btn my-4 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handleClick}
+        >
           Add to Cart
         </button>
       </div>

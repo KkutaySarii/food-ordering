@@ -6,6 +6,7 @@ import MenuItem from "./MenuItem";
 const MenuWrapper = ({ categoryList, productList }) => {
   const [active, setActive] = useState(0);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filterSlice, setFilterSlice] = useState(3);
 
   useEffect(() => {
     if (categoryList.length > 0) {
@@ -15,7 +16,6 @@ const MenuWrapper = ({ categoryList, productList }) => {
       setFilteredProducts(filtered);
     }
   }, [active, categoryList, productList]);
-
   return (
     <div className="container mx-auto flex flex-col items-center pt-[45px] pb-[90px]">
       <Title addClass="text-[40px]">Our Menu</Title>
@@ -29,20 +29,27 @@ const MenuWrapper = ({ categoryList, productList }) => {
               }`}
               onClick={() => {
                 setActive(index);
+                setFilterSlice(3);
               }}
             >
               {category.title}
             </button>
           ))}
       </div>
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredProducts.length > 0 &&
-          filteredProducts.map((product) => (
-            <MenuItem key={product._id} product={product} />
-          ))}
+          filteredProducts
+            .slice(0, filterSlice)
+            .map((product) => <MenuItem key={product._id} product={product} />)}
       </div>
       <div className="mt-11">
-        <button className="btn">View More</button>
+        <button
+          disabled={filteredProducts.length < filterSlice}
+          onClick={() => setFilterSlice(filterSlice + 3)}
+          className="btn disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          View More
+        </button>
       </div>
     </div>
   );
