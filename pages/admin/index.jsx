@@ -7,6 +7,7 @@ import { IoExitOutline } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi";
 import { BsWindowDesktop } from "react-icons/bs";
+import { AiFillAccountBook } from "react-icons/ai";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -16,6 +17,7 @@ import Orders from "@/components/Admin/orders";
 import Category from "@/components/Admin/category";
 import Footer from "@/components/Admin/footer";
 import AddProduct from "@/components/Admin/addProduct";
+import Reservations from "@/components/Admin/reservations";
 
 const Index = ({ productList }) => {
   const [tabs, setTabs] = useState(0);
@@ -120,6 +122,19 @@ const Index = ({ productList }) => {
             >
               <button
                 className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
+                onClick={() => setTabs(4)}
+              >
+                <AiFillAccountBook />
+                <span>Reservations</span>
+              </button>
+            </li>
+            <li
+              className={`border-x-2 text-black border-t border-b-2 ${
+                tabs === 5 && "text-white bg-primary"
+              }`}
+            >
+              <button
+                className="p-2 flex items-center gap-x-1 hover:bg-primary hover:text-white w-full"
                 onClick={logout}
               >
                 <IoExitOutline />
@@ -133,6 +148,7 @@ const Index = ({ productList }) => {
       {tabs === 1 && <Orders />}
       {tabs === 2 && <Category />}
       {tabs === 3 && <Footer />}
+      {tabs === 4 && <Reservations />}
       {isProductModal && <AddProduct setIsProductModal={setIsProductModal} />}
       <button
         className="absolute bottom-10 right-10 btn !w-12 !h-12 !p-0 !grid place-content-center !rounded-full"

@@ -9,7 +9,6 @@ import Title from "@/components/Ui/Title";
 
 const Products = ({ productList }) => {
   const [campaigns, setCampaigns] = useState([]);
-  const [discount, setDiscount] = useState("");
 
   const getCampaigns = async () => {
     try {

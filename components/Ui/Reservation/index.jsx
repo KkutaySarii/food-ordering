@@ -1,26 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 import Input from "@/components/Form/Input";
 import Title from "../Title";
 import { reservationSchema } from "@/schema/reservationSchema";
 
 const Reservation = () => {
+  const [curUser, setCurUser] = useState();
   const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    });
-    actions.resetForm();
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/reservation`,
+        values
+      );
+      if (res.status === 201) {
+        toast.success("Reservation added successfully!");
+        actions.resetForm();
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
   };
 
+  const { data: session } = useSession();
+  useEffect(() => {
+    const getUser = async () => {
+      if (session) {
+        try {
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/user`
+          );
+          const user = res.data.data.filter(
+            (user) => user.email === session.user.email
+          );
+          setCurUser(user[0]);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    getUser();
+  }, [session, curUser]);
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
+      enableReinitialize: true,
       initialValues: {
-        fullName: "",
-        phoneNumber: "",
-        email: "",
-        persons: "",
+        fullName: curUser?.fullName || "",
+        phoneNumber: curUser?.phoneNumber || "",
+        email: curUser?.email || "",
+        personCount: "",
         date: "",
       },
       onSubmit,
@@ -40,7 +72,7 @@ const Reservation = () => {
     {
       id: 2,
       name: "phoneNumber",
-      type: "number",
+      type: "text",
       placeholder: "Phone Number",
       value: values.phoneNumber,
       errorMessage: errors.phoneNumber,
@@ -57,12 +89,12 @@ const Reservation = () => {
     },
     {
       id: 4,
-      name: "persons",
+      name: "personCount",
       type: "number",
       placeholder: "How Many Persons?",
-      value: values.persons,
-      errorMessage: errors.persons,
-      touched: touched.persons,
+      value: values.personCount,
+      errorMessage: errors.personCount,
+      touched: touched.personCount,
     },
     {
       id: 5,
@@ -91,7 +123,9 @@ const Reservation = () => {
               />
             ))}
           </div>
-          <button className="btn mt-4">BOOK NOW</button>
+          <button type="submit" className="btn mt-4">
+            BOOK NOW
+          </button>
         </form>
         <div className="md:flex-1 w-full">
           <iframe
