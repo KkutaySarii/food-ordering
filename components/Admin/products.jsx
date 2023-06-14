@@ -1,11 +1,31 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import axios from "axios";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 import Title from "@/components/Ui/Title";
 
 const Products = ({ productList }) => {
+  const [campaigns, setCampaigns] = useState([]);
+  const [discount, setDiscount] = useState("");
+
+  const getCampaigns = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/campaign`
+      );
+      setCampaigns(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getCampaigns();
+  }, []);
+
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
@@ -17,6 +37,59 @@ const Products = ({ productList }) => {
       toast.error(error.response.data.message);
     }
   };
+
+  const handleAddCampaign = async (id, image) => {
+    try {
+      Swal.fire({
+        title: "What is the discount?",
+        input: "number",
+        inputPlaceholder: "Discount",
+        icon: "question",
+        confirmButtonColor: "#10b981",
+        confirmButtonText: "Add",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "What is the title?",
+            input: "text",
+            inputPlaceholder: "Title",
+            icon: "question",
+            confirmButtonColor: "#10b981",
+            confirmButtonText: "Add",
+          }).then(async (result2) => {
+            if (result2.isConfirmed) {
+              const res = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/campaign`,
+                {
+                  product_id: id,
+                  title: result2.value,
+                  discount: result.value,
+                  image: image,
+                }
+              );
+              toast.success("Campaign added!");
+              getCampaigns();
+            }
+          });
+        }
+      });
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
+
+  const handleTakeOff = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/campaign/${id}`
+      );
+      toast.success(res.data.message);
+      getCampaigns();
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
+
   return (
     <div className="w-full mt-5 overflow-x-auto flex flex-col items-start">
       <Title addClass="text-[40px]">Products</Title>
@@ -38,6 +111,9 @@ const Products = ({ productList }) => {
               </th>
               <th scope="col" className="py-3 px-6">
                 ACTION
+              </th>
+              <th scope="col" className="py-3 px-6">
+                CAMPAIGN
               </th>
             </tr>
           </thead>
@@ -68,6 +144,36 @@ const Products = ({ productList }) => {
                     >
                       Delete
                     </button>
+                  </td>
+                  <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    {campaigns.find(
+                      (campaign) => campaign.product_id === product._id
+                    ) ? (
+                      <button
+                        className="btn !bg-danger"
+                        onClick={() =>
+                          handleTakeOff(
+                            campaigns[
+                              campaigns.findIndex(
+                                (campaign) =>
+                                  campaign.product_id === product._id
+                              )
+                            ]._id
+                          )
+                        }
+                      >
+                        Take off
+                      </button>
+                    ) : (
+                      <button
+                        className="btn !bg-success"
+                        onClick={() =>
+                          handleAddCampaign(product._id, product.image)
+                        }
+                      >
+                        Add
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

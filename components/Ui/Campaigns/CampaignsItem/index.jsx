@@ -7,8 +7,8 @@ import Title from "../../Title";
 const CampaignsItem = (props) => {
   const { title, percent, image } = props;
   return (
-    <div className="flex flex-1 px-[15px] mt-[45px]  gap-x">
-      <div className="bg-secondary self-center flex md:flex-col custommd:flex-row flex-row flex-1 rounded-md py-5 px-[15px] ">
+    <div className="flex flex-1 px-[15px] mt-[45px] gap-x-2">
+      <div className="bg-secondary min-h-[250px] self-center flex md:flex-col custommd:flex-row flex-row flex-1 rounded-md py-5 px-[15px] ">
         <div className="relative w-[165px] h-[165px] border-[5px] border-primary rounded-full overflow-hidden mr-[15px]">
           <Image
             src={image}
@@ -27,7 +27,7 @@ const CampaignsItem = (props) => {
             </span>
             <span>Off</span>
           </div>
-          <button className="btn flex items-center">
+          <button className="btn !px-2 flex items-center">
             {"Order Now"}
             <HiShoppingCart size={20} className="ml-1" />
           </button>

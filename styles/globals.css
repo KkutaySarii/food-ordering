@@ -25,6 +25,10 @@ body {
   @apply !m-0;
 }
 
+.slick-slider {
+  @apply !-mt-[88px];
+}
+
 .slick-dots .slick-active div {
   @apply bg-primary scale-150;
 }
