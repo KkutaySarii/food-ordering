@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 import { addProduct } from "@/redux/cartSlice";
 import Title from "@/components/Ui/Title";
+import Input from "@/components/Form/Input";
 
-import axios from "axios";
-
-const ProductDetail = ({ product }) => {
+const ProductDetail = ({ product, isAdmin }) => {
   const [price, setPrice] = useState(product.prices[0]);
   const [size, setSize] = useState(0);
   const [extras, setExtras] = useState([]);
+  const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
@@ -36,7 +37,7 @@ const ProductDetail = ({ product }) => {
   };
 
   const handleClick = () => {
-    dispatch(addProduct({ ...product, extras, price, quantity: 1 }));
+    dispatch(addProduct({ ...product, extras, price, quantity: quantity }));
   };
 
   return (
@@ -51,7 +52,7 @@ const ProductDetail = ({ product }) => {
         </span>
         <p className="text-sm my-4">{product?.desc}</p>
 
-        {product?.category === "Pizza" && (
+        {product?.category === "PIZZA" && (
           <div className="my-4">
             <h4 className="text-xl font-bold">Choose the size</h4>
             <div className="flex items-center gap-x-20 md:justify-start justify-center">
@@ -115,25 +116,42 @@ const ProductDetail = ({ product }) => {
             );
           })}
         </div>
-        <button
-          disabled={isProductInCart}
-          className="btn my-4 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={handleClick}
-        >
-          Add to Cart
-        </button>
+        {!isAdmin && (
+          <div className="flex items-center gap-2">
+            <div className="w-1/4">
+              <Input
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+            </div>
+            <button
+              disabled={isProductInCart}
+              className="btn my-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleClick}
+            >
+              Add to Cart
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export const getServerSideProps = async ({ params }) => {
+export const getServerSideProps = async ({ params, req }) => {
+  const cookie = req?.cookies || "";
+  let isAdmin = false;
+  if (cookie.admin === process.env.ADMIN_TOKEN) {
+    isAdmin = true;
+  }
   const res = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/products/${params.id}`
   );
   return {
     props: {
       product: res.data?.data || {},
+      isAdmin,
     },
   };
 };

@@ -18,9 +18,41 @@ export const cartSlice = createSlice({
       state.quantity = 0;
       state.total = 0;
     },
+    plusProduct: (state, action) => {
+      state.products.map((product) => {
+        if (product._id === action.payload.id) {
+          product.quantity += action.payload.quantity;
+        }
+      });
+      state.quantity += action.payload.quantity;
+      state.total += action.payload.price;
+    },
+    minusProduct: (state, action) => {
+      state.products.map((product) => {
+        if (product._id === action.payload.id) {
+          product.quantity -= action.payload.quantity;
+        }
+      });
+      state.quantity -= action.payload.quantity;
+      state.total -= action.payload.price;
+    },
+    deleteProduct: (state, action) => {
+      const index = state.products.findIndex(
+        (product) => product._id !== action.payload.id
+      );
+      state.products.splice(index, 1);
+      state.quantity--;
+      state.total -= action.payload.price;
+    },
   },
 });
 
-export const { addProduct, resetCart } = cartSlice.actions;
+export const {
+  addProduct,
+  resetCart,
+  plusProduct,
+  minusProduct,
+  deleteProduct,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

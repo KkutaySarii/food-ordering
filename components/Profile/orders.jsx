@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import axios from "axios";
 
@@ -7,6 +8,7 @@ import Title from "@/components/Ui/Title";
 const Order = ({ customer }) => {
   const [orders, setOrders] = useState([]);
   const statusList = ["Preparing", "On the way", "Delivered"];
+  const router = useRouter();
   useEffect(() => {
     const getOrders = async () => {
       try {
@@ -53,7 +55,8 @@ const Order = ({ customer }) => {
               orders.map((order) => (
                 <tr
                   key={order._id}
-                  className="bg-secondary hover:bg-primary transition-all"
+                  className="bg-secondary hover:bg-primary transition-all cursor-pointer"
+                  onClick={() => router.push(`/order/${order._id}`)}
                 >
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center    ">
                     {order?._id.length > 8 ? order?._id.slice(0, 8) : order._id}

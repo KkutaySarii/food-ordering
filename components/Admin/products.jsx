@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
 
 import axios from "axios";
@@ -6,10 +7,11 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 import Title from "@/components/Ui/Title";
+import e from "cors";
 
 const Products = ({ productList }) => {
   const [campaigns, setCampaigns] = useState([]);
-
+  const router = useRouter();
   const getCampaigns = async () => {
     try {
       const res = await axios.get(
@@ -121,7 +123,8 @@ const Products = ({ productList }) => {
               productList.map((product) => (
                 <tr
                   key={product._id}
-                  className="transition-all bg-secondary border-gray-700 hover:bg-primary "
+                  className="transition-all bg-secondary border-gray-700 hover:bg-primary cursor-pointer"
+                  onClick={() => router.push(`/product/${product._id}`)}
                 >
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
                     <Image src={product.image} alt="" width={50} height={50} />
@@ -139,7 +142,10 @@ const Products = ({ productList }) => {
                   <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                     <button
                       className="btn !bg-danger"
-                      onClick={() => handleDelete(product._id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(product._id);
+                      }}
                     >
                       Delete
                     </button>
@@ -150,7 +156,8 @@ const Products = ({ productList }) => {
                     ) ? (
                       <button
                         className="btn !bg-danger"
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           handleTakeOff(
                             campaigns[
                               campaigns.findIndex(
@@ -158,17 +165,18 @@ const Products = ({ productList }) => {
                                   campaign.product_id === product._id
                               )
                             ]._id
-                          )
-                        }
+                          );
+                        }}
                       >
                         Take off
                       </button>
                     ) : (
                       <button
                         className="btn !bg-success"
-                        onClick={() =>
-                          handleAddCampaign(product._id, product.image)
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddCampaign(product._id, product.image);
+                        }}
                       >
                         Add
                       </button>

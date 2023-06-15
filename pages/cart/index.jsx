@@ -7,8 +7,15 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { BsPlusCircleFill } from "react-icons/bs";
+import { AiFillMinusCircle } from "react-icons/ai";
 
-import { resetCart } from "@/redux/cartSlice";
+import {
+  resetCart,
+  plusProduct,
+  minusProduct,
+  deleteProduct,
+} from "@/redux/cartSlice";
 import Title from "@/components/Ui/Title";
 
 const Index = ({ userList }) => {
@@ -25,6 +32,7 @@ const Index = ({ userList }) => {
     total: cart.total,
     paymentMethod: 0,
     status: 0,
+    quantity: cart.quantity,
   };
 
   const handleCheckout = async () => {
@@ -64,7 +72,25 @@ const Index = ({ userList }) => {
       toast.error(error.message);
     }
   };
-
+  const handleMinus = (quantity, product) => {
+    if (quantity > 1) {
+      dispatch(
+        minusProduct({
+          ...product,
+          id: product._id,
+          quantity: 1,
+          price: product.price,
+        })
+      );
+    } else {
+      dispatch(
+        deleteProduct({
+          id: product._id,
+          price: product.price,
+        })
+      );
+    }
+  };
   return (
     <div className="min-h-[calc(100vh_-_460px)]">
       <div className="flex justify-between md:flex-row flex-col">
@@ -89,38 +115,68 @@ const Index = ({ userList }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cart.products.map((product) => (
-                    <tr
-                      key={product.id}
-                      className="bg-secondary hover:bg-primary transition-all"
-                    >
-                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center    ">
-                        <Image
-                          src={product?.image}
-                          alt="pizza"
-                          width={50}
-                          height={50}
-                        />
-                        <span>{product.name}</span>
-                      </td>
-                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                        {product.extras.length > 0 ? (
-                          product.extras.map((extra) => {
-                            const { id, name } = extra;
-                            return <span key={id}>{name}, </span>;
-                          })
-                        ) : (
-                          <span>No Extras</span>
-                        )}
-                      </td>
-                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                        <span>${product.price}</span>
-                      </td>
-                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                        <span>{product.quantity}</span>
-                      </td>
-                    </tr>
-                  ))}
+                  {cart.quantity > 0 &&
+                    cart.products.map((product) => (
+                      <tr
+                        key={product.id}
+                        className="bg-secondary hover:bg-primary transition-all"
+                      >
+                        <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center ">
+                          <Image
+                            src={product?.image}
+                            alt="pizza"
+                            width={50}
+                            height={50}
+                          />
+                          <span>{product.name}</span>
+                        </td>
+                        <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                          {product.extras.length > 0 ? (
+                            product.extras.map((extra) => {
+                              const { id, name } = extra;
+                              return <span key={id}>{name}, </span>;
+                            })
+                          ) : (
+                            <span>No Extras</span>
+                          )}
+                        </td>
+                        <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                          <span>${product.price}</span>
+                        </td>
+                        <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white ">
+                          <div className="flex justify-center items-center gap-1">
+                            <button
+                              onClick={() =>
+                                handleMinus(cart.quantity, product)
+                              }
+                            >
+                              <AiFillMinusCircle
+                                className="hover:scale-110"
+                                size={16}
+                              />
+                            </button>
+                            <span>{product.quantity}</span>
+                            <button
+                              onClick={() =>
+                                dispatch(
+                                  plusProduct({
+                                    ...product,
+                                    id: product._id,
+                                    quantity: 1,
+                                    price: product.price,
+                                  })
+                                )
+                              }
+                            >
+                              <BsPlusCircleFill
+                                className="hover:scale-110"
+                                size={16}
+                              />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             ) : (
